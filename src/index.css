@@ -45,7 +45,7 @@ code {
 
 .dailyPlaylist {
   position: absolute;
-  top: 55%;
+  top: 75%;
   left: 90%;
   transform: translate(-50%, -50%);
 }
@@ -61,6 +61,18 @@ code {
   margin: 20px;
 }
 
+.myPostsContainer {
+  position: absolute;
+  top: 130%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.userPost {
+  position: absolute;
+  
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 #search {
   position: absolute;
   top: 38%;
@@ -131,5 +143,11 @@ code {
   font-size: 180px;
   -webkit-text-fill-color: #05f2aa;
   /* background-clip: text ; */
+}
 
+.likesContainer {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

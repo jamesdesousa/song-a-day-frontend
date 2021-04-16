@@ -12,13 +12,18 @@ import NewPost from "./NewPost";
 import UserPosts from "./UserPosts";
 import NewPostSongs from "./NewPostSongs";
 import Login from "./Login";
+import Likes from "./Likes";
 const spotifyApi = new SpotifyWebApi();
-
+//addLike a filter to only show posts for certain user and then in those cards addLike a delete function for my post page
+//addLike a like functionality (liked/not liked)
+//addLike caption 
+//done ! 
 
 
 function App() {
   console.log(process.env.REACT_APP_SPOTIFY_API_KEY)
   spotifyApi.setAccessToken(process.env.REACT_APP_SPOTIFY_API_KEY)
+  
   const [search, setSearch] = useState('')
   const [todaysPlaylist, setTodaysPlaylist] = useState(0)
   const [todaySongs, setTodaySongs] = useState([])
@@ -28,9 +33,12 @@ function App() {
   const [pickedSong, setPickedSong] = useState('')
   const [genre, setGenre] = useState('0')
   //setting current user 
-  const [currentUser, setCurrentUser] = useState('')
-
-  // const todaysPlaylistId = ''
+  const [currentUser, setCurrentUser] = useState(1)
+  //setting postID for like 
+  const [likedPost, setLikedPost] = useState('')
+  //setting restriction for posting 
+  const[timer, setTimer] = useState(false)
+   
   useEffect(() => {
     spotifyApi.getFeaturedPlaylists().then(
       function (data) {
@@ -57,8 +65,9 @@ function App() {
   function handleSubmit() {
     console.log(pickedSong)
     console.log(genre)
-    
-
+    setTimer(!timer)
+    countdownTimer()
+    setChosenSong(!chosenSong)
     const formData = {
       name: pickedSong.name,
       artist: pickedSong.artist,
@@ -79,6 +88,10 @@ function App() {
         handlePost(song)
         
       })
+  }
+  
+  function countdownTimer() {
+    setTimeout(() => {setTimer(!timer)}, 10000)
   }
 
   function handlePost(song) {
@@ -120,6 +133,29 @@ function App() {
     )
   }
 
+  function addLike(likedPost) {
+    console.log(likedPost)
+    const formData = {
+      post_id: likedPost,
+      user_id: 1
+    }
+    fetch("http://localhost:3000/likes", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body:
+        JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(like => {
+        console.log(like)
+        
+      })
+  }
+
+
+
  
   console.log(pickedSong)
 
@@ -127,14 +163,15 @@ function App() {
     <div className="App">
       {/* <Search search={search} setSearch={setSearch} songSearch={songSearch}/> */}
       <Logo/>
+      <SideMenu />
       <Switch>
         <Route exact path="/login">
           <Login currentUser={currentUser} setCurrentUser={setCurrentUser}  />
         </Route>
       <Route exact path="/homepage">
-      <PlaylistContainer todaysPlaylist={todaysPlaylist} />
-      <MainContainer todaySongs={todaySongs}/>
-      <SideMenu />
+      <PlaylistContainer todaysPlaylist={todaysPlaylist} likedPost={likedPost} setLikedPost={setLikedPost}  />
+      <MainContainer todaySongs={todaySongs} addLike={addLike}/>
+      
       </Route>
       {/* <Route exact path="/edit">
         <EditUser />
@@ -142,11 +179,11 @@ function App() {
       <Route exact path="/new_post">
         <NewPost search={search} setSearch={setSearch} songSearch={songSearch} newSong={newSong} pickedSong={pickedSong} setPickedSong={setPickedSong} genre={genre} setGenre={setGenre} chosenSong={chosenSong} setChosenSong={setChosenSong} handleSubmit={handleSubmit}/>
       </Route>
-      {/* <Route exact path='/following'>
-        <Following />
-      </Route> */}
+      <Route exact path='/likes'>
+        <Likes todaySongs={todaySongs} currentUser={currentUser} />
+      </Route>
       <Route exact path='/posts'/>
-      <UserPosts />
+      <UserPosts todaySongs={todaySongs} currentUser={currentUser} setTodaySongs={setTodaySongs} />
       <Route path="*">
         <h1>404 not found</h1>
       </Route>

@@ -3,7 +3,7 @@ function PlaylistOfTheDay({todaysPlaylist}) {
     return (
        <div className='dailyPlaylist'>
            { !!todaysPlaylist && 
-            <iframe src= {`https://open.spotify.com/embed/playlist/${todaysPlaylist}`} width="300" height="580" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> 
+            <iframe src= {`https://open.spotify.com/embed/playlist/${todaysPlaylist}`} width="300" height="900" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> 
            }
            
        </div>
