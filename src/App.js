@@ -22,7 +22,7 @@ const spotifyApi = new SpotifyWebApi();
 
 function App() {
   console.log(process.env.REACT_APP_SPOTIFY_API_KEY)
-  spotifyApi.setAccessToken(process.env.REACT_APP_SPOTIFY_API_KEY)
+  // spotifyApi.setAccessToken(process.env.REACT_APP_SPOTIFY_API_KEY)
   
   const [search, setSearch] = useState('')
   const [todaysPlaylist, setTodaysPlaylist] = useState(0)
@@ -38,6 +38,8 @@ function App() {
   const [likedPost, setLikedPost] = useState('')
   //setting restriction for posting 
   const[timer, setTimer] = useState(false)
+  //set caption
+  const [newCaption, setNewCaption] = useState('')
    
   useEffect(() => {
     spotifyApi.getFeaturedPlaylists().then(
@@ -73,6 +75,7 @@ function App() {
       artist: pickedSong.artist,
       track_id: pickedSong.track_id,
       genre_id: parseInt(genre)
+     
     }
     fetch("http://localhost:3000/songs", {
       method: 'POST',
@@ -95,10 +98,12 @@ function App() {
   }
 
   function handlePost(song) {
+    
     console.log(song)
     const formData = {
       song_id: song.id,
-      user_id: 1
+      user_id: 1,
+      caption: newCaption
     }
     fetch("http://localhost:3000/posts", {
       method: 'POST',
@@ -115,9 +120,29 @@ function App() {
       })
   }
 
+  function handleCaptionSubmit(event, id) {
+
+    
+    // console.log(post)
+    
+    fetch(`http://localhost:3000/posts/${id}`, {
+        method: 'PATCH',
+        headers: {
+            'Content-Type': 'application/json',
+            'accept': 'application/json',
+        },
+        body: JSON.stringify({caption: event })
+    })
+    .then(data => data.json())
+    .then(post => todaySongs[id].comment = post.comment)
+}
+
+
+
   function addPost(newPost){
     const newPostArray=[...todaySongs, newPost]
     setTodaySongs(newPostArray)
+    console.log(newPost.created_at)
   }
 
 
@@ -157,7 +182,7 @@ function App() {
 
 
  
-  console.log(pickedSong)
+
 
   return (
     <div className="App">
@@ -177,13 +202,13 @@ function App() {
         <EditUser />
       </Route> */}
       <Route exact path="/new_post">
-        <NewPost search={search} setSearch={setSearch} songSearch={songSearch} newSong={newSong} pickedSong={pickedSong} setPickedSong={setPickedSong} genre={genre} setGenre={setGenre} chosenSong={chosenSong} setChosenSong={setChosenSong} handleSubmit={handleSubmit}/>
+        <NewPost search={search} setSearch={setSearch} songSearch={songSearch} newSong={newSong} pickedSong={pickedSong} setPickedSong={setPickedSong} genre={genre} setGenre={setGenre} chosenSong={chosenSong} setChosenSong={setChosenSong} handleSubmit={handleSubmit} newCaption={newCaption} setNewCaption={setNewCaption}/>
       </Route>
       <Route exact path='/likes'>
         <Likes todaySongs={todaySongs} currentUser={currentUser} />
       </Route>
       <Route exact path='/posts'/>
-      <UserPosts todaySongs={todaySongs} currentUser={currentUser} setTodaySongs={setTodaySongs} />
+      <UserPosts todaySongs={todaySongs} currentUser={currentUser} setTodaySongs={setTodaySongs} handleCaptionSubmit={handleCaptionSubmit} newCaption={newCaption} setNewCaption={setNewCaption} />
       <Route path="*">
         <h1>404 not found</h1>
       </Route>

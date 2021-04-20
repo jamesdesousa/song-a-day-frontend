@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import UserPostsCard from "./UserPostsCard";
-function UserPosts({todaySongs, currentUser, setTodaySongs}) {
+function UserPosts({todaySongs, currentUser, setTodaySongs, handleCaptionSubmit, newCaption, setNewCaption}) {
     
     
     function deletePosts(id) {
@@ -14,13 +14,16 @@ function UserPosts({todaySongs, currentUser, setTodaySongs}) {
       }
     
     const myPosts = todaySongs.map((post) => {
-        console.log(post)
+        // console.log(post)
         if (post.user.id === currentUser) {
           return (
               <UserPostsCard
               key={post.id}
               post={post}
               deletePosts={deletePosts}
+              handleCaptionSubmit={handleCaptionSubmit}
+              newCaption={newCaption}
+              setNewCaption={setNewCaption}
               />
           ) 
         }

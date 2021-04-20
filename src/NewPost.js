@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import NewPostSongs from "./NewPostSongs";
-function NewPost({search, setSearch, songSearch, newSong, pickedSong, setPickedSong, genre, setGenre, chosenSong, setChosenSong, handleSubmit}) {
+function NewPost({search, setSearch, songSearch, newSong, pickedSong, setPickedSong, genre, setGenre, chosenSong, setChosenSong, handleSubmit, newCaption, setNewCaption}) {
 
     //only show save song to spotify if user is logged in
 
     function updateSearch(event) {
         setSearch(event.target.value)
         songSearch(event.target.value)
+    }
+
+    function updateCaption(event) {
+        setNewCaption(event.target.value)
+        
+        console.log(event)
     }
     console.log(newSong)
     const listOfSongs = !!newSong && newSong.map((songObj) => {
@@ -71,11 +77,18 @@ function NewPost({search, setSearch, songSearch, newSong, pickedSong, setPickedS
                     <option value="4">Hip-Hop</option>
                     
             </select>
-
-            
-
-
             </div>
+            <div className='changeCaption'>
+                <input
+                type="text"
+                id="search"
+                placeholder="New Caption..."
+                onChange={updateCaption}
+                value= {newCaption}
+                />
+                
+
+              </div>
 
             <button className='fluid ui green button postButton' onClick={() => handleSubmit()}>Create Post</button>
 

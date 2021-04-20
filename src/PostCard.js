@@ -4,9 +4,11 @@ function PostCard({postObj, setLikedPost, likedPost, addLike}) {
     return (
        <div>
            <li className = "ui fluid card onePost">
-            <h4>{`${postObj.user.name}'s SOTD:`}</h4>
-            <p>{postObj.song.name}</p>
+            <h3>{`${postObj.user.name}'s SOTD:`}</h3>
+            <b>{postObj.song.name}</b>
             <p>{postObj.song.artist}</p>
+            <p>Caption:</p>
+            <p>{postObj.caption}</p>
            <iframe src= {`https://open.spotify.com/embed/track/${postObj.song.track_id}`} width="400" height="85" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> 
            <button onClick={() => addLike(postObj.id)}>Like</button> 
 
